@@ -23,6 +23,7 @@ import { Loader2 } from 'lucide-react'
 import { sign } from 'crypto'
 import { useRouter } from 'next/navigation'
 import { getLoggedInUser, signIn, signUp } from '@/lib/action/user.actions'
+import PlaidLink from './PlaidLink'
 
 const AuthForm = ({type}: { type : string}) => {
     const router = useRouter();
@@ -35,7 +36,7 @@ const AuthForm = ({type}: { type : string}) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      password: '',
+      password: ''
     },
   })
  
@@ -44,10 +45,22 @@ const AuthForm = ({type}: { type : string}) => {
     setIsLoading(true);
 
     try {
-        // Sign up with Appwrite & creat plaid token
-
+        // Sign up with Appwrite & create plaid token
+        
         if(type === 'sign-up') {
-            const newUser = await signUp(data);
+            const userData = {
+                firstName: data.firstName!,
+                lastName: data.lastName!,
+                address1: data.address1!,
+                city: data.city!,
+                state: data.state!,
+                postalCode: data.postalCode!,
+                dateOfBirth: data.dateOfBirth!,
+                ssn: data.ssn!,
+                email: data.email,
+                password: data.password
+            }
+            const newUser = await signUp(userData);
 
             setUser(newUser);
         }
@@ -55,8 +68,9 @@ const AuthForm = ({type}: { type : string}) => {
         if(type === 'sign-in') {
             const response = await signIn({
                 email: data.email,
-                password: data.password
+                password: data.password,
             })
+            
             if(response) router.push('/');
         }
     } catch (error) {
@@ -99,10 +113,13 @@ const AuthForm = ({type}: { type : string}) => {
                 </h1>
             </div>
         </header>
-        {
-            user ? (
+        {user ? (
                 <div className="flex flex-col gap-4">
-                    {/* PlaidLink */}
+                    <PlaidLink 
+                        user={user}
+                        variant="primary"
+                    
+                    />
                 </div>
         ): (
             <>
