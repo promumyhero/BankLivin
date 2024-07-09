@@ -152,11 +152,11 @@ export const createLinkToken = async (user: User) => {
 }
 
 export const createBankAccount = async ({
-  userId,
-  bankId,
   accountId,
+  bankId,
   accessToken,
   fundingSourceUrl,
+  userId,
   shareableId,
 }: createBankAccountProps) => {
   try {
@@ -167,11 +167,11 @@ export const createBankAccount = async ({
       BANK_COLLECTION_ID!,
       ID.unique(),
       {
-        userId,
-        bankId,
         accountId,
+        bankId,
         accessToken,
         fundingSourceUrl,
+        userId,
         shareableId,
       }
     )
@@ -224,11 +224,11 @@ export const exchangePublicToken = async ({
 
     // Create a bank account using the user ID, item ID, account ID, access token, funding source URL, and shareableId ID
     await createBankAccount({
-      userId: user.$id,
-      bankId: itemId,
       accountId: accountData.account_id,
+      bankId: itemId,
       accessToken,
       fundingSourceUrl,
+      userId: user.$id,
       shareableId: encryptId(accountData.account_id),
     });
 
